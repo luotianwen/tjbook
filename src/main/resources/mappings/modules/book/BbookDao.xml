@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.book.dao.BbookDao">
+    
+	<sql id="bbookColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.cid AS "cid",
+		a.cname AS "cname",
+		a.status AS "status",
+		a.lll AS "lll",
+		a.remarks AS "remarks",
+		a.score ,
+		a.create_date AS "createDate",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="bbookJoins">
+	</sql>
+    
+	<select id="get" resultType="Bbook">
+		SELECT 
+			<include refid="bbookColumns"/>
+		FROM b_book a
+		<include refid="bbookJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findremList" resultType="Bbook">
+		SELECT
+		<include refid="bbookColumns"/>
+		FROM b_book a
+		 where     a.id not in ( select  b.bid from b_user_book b <![CDATA[ where b.uid <> #{id} ]]>)
+
+	</select>
+	<select id="findtjList" resultType="Bbook">
+		SELECT
+		<include refid="bbookColumns"/>
+		FROM b_book a
+		<include refid="bbookJoins"/>
+		<where>
+
+			<if test="id != null and id != ''">
+			<![CDATA[ AND a.id <> #{id} ]]>
+			</if>
+
+			<if test="cid != null and cid != ''">
+				AND a.cid =#{cid}
+			</if>
+		</where>
+
+	</select>
+	<select id="findList" resultType="Bbook">
+		SELECT 
+			<include refid="bbookColumns"/>
+		FROM b_book a
+		<include refid="bbookJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Bbook">
+		SELECT 
+			<include refid="bbookColumns"/>
+		FROM b_book a
+		<include refid="bbookJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO b_book(
+			id,
+			title,
+			cid,
+			cname,
+			status,
+			lll,
+			remarks,
+			create_date,
+			num
+		) VALUES (
+			#{id},
+			#{title},
+			#{cid},
+			#{cname},
+			#{status},
+			#{lll},
+			#{remarks},
+			#{createDate},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE b_book SET 	
+			title = #{title},
+			cid = #{cid},
+			cname = #{cname},
+			status = #{status},
+			lll = #{lll},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM b_book
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

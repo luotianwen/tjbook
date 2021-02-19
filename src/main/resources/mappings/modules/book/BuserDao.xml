@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.book.dao.BuserDao">
+    
+	<sql id="buserColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.phone AS "phone",
+		a.status AS "status",
+		a.pass AS "pass",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="buserJoins">
+	</sql>
+    
+	<select id="get" resultType="Buser">
+		SELECT 
+			<include refid="buserColumns"/>
+		FROM b_buser a
+		<include refid="buserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Buser">
+		SELECT 
+			<include refid="buserColumns"/>
+		FROM b_buser a
+		<include refid="buserJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="pass != null and pass != ''">
+				AND a.pass = #{pass}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Buser">
+		SELECT 
+			<include refid="buserColumns"/>
+		FROM b_buser a
+		<include refid="buserJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO b_buser(
+			id,
+			name,
+			phone,
+			status,
+			pass,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{name},
+			#{phone},
+			#{status},
+			#{pass},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE b_buser SET 	
+			name = #{name},
+			phone = #{phone},
+			status = #{status},
+			pass = #{pass},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM b_buser
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

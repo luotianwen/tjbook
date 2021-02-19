@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.book.dao.BclassDao">
+    
+	<sql id="bclassColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="bclassJoins">
+	</sql>
+    
+	<select id="get" resultType="Bclass">
+		SELECT 
+			<include refid="bclassColumns"/>
+		FROM b_class a
+		<include refid="bclassJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Bclass">
+		SELECT 
+			<include refid="bclassColumns"/>
+		FROM b_class a
+		<include refid="bclassJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Bclass">
+		SELECT 
+			<include refid="bclassColumns"/>
+		FROM b_class a
+		<include refid="bclassJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO b_class(
+			id,
+			name,
+			remarks
+		) VALUES (
+			#{id},
+			#{name},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE b_class SET 	
+			name = #{name},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM b_class
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

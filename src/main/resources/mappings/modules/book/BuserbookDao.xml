@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.book.dao.BuserbookDao">
+    
+	<sql id="buserbookColumns">
+		a.id AS "id",
+		a.uid AS "u.id",
+		a.bid AS "b.id",
+		b.title as "b.title",
+		u.name AS "u.name",
+		b.score AS "b.score",
+		a.cratetime AS "cratetime"
+	</sql>
+	
+	<sql id="buserbookJoins">
+		left  join b_book b on b.id=a.bid
+		left  join b_buser u on u.id=a.uid
+	</sql>
+    
+	<select id="get" resultType="Buserbook">
+		SELECT 
+			<include refid="buserbookColumns"/>
+		FROM b_user_book a
+		<include refid="buserbookJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="findGroupByList" resultType="Buserbook">
+		SELECT
+		distinct a.uid AS "u.id"
+		FROM b_user_book a
+
+	</select>
+	<select id="findList" resultType="Buserbook">
+		SELECT 
+			<include refid="buserbookColumns"/>
+		FROM b_user_book a
+		<include refid="buserbookJoins"/>
+		<where>
+			
+			<if test="u != null and u.id != null and u.id != ''">
+				AND a.uid = #{u.id}
+			</if>
+			<if test="u != null and u.name != null and u.name != ''">
+				AND u.name = #{u.name}
+			</if>
+			<if test="b != null and b.title != null and b.title != ''">
+				AND b.title = #{b.title}
+			</if>
+			<if test="b != null and b.id != null and b.id != ''">
+				AND a.bid = #{b.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Buserbook">
+		SELECT 
+			<include refid="buserbookColumns"/>
+		FROM b_user_book a
+		<include refid="buserbookJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO b_user_book(
+			id,
+			uid,
+			bid,
+			cratetime
+		) VALUES (
+			#{id},
+			#{u.id},
+			#{b.id},
+			#{cratetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE b_user_book SET 	
+			uid = #{u.id},
+			bid = #{b.id},
+			cratetime = #{cratetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM b_user_book
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
