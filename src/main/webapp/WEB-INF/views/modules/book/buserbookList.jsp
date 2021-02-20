@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>用户图书管理管理</title>
+	<title>用户小说管理管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -18,8 +18,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/book/buserbook/">用户图书管理列表</a></li>
-		<shiro:hasPermission name="book:buserbook:edit"><li><a href="${ctx}/book/buserbook/form">用户图书管理添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/book/buserbook/">用户小说管理列表</a></li>
+		<shiro:hasPermission name="book:buserbook:edit"><li><a href="${ctx}/book/buserbook/form">用户小说管理添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="buserbook" action="${ctx}/book/buserbook/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -59,7 +59,7 @@
 				</td>
 				<shiro:hasPermission name="book:buserbook:edit"><td>
     				<a href="${ctx}/book/buserbook/form?id=${buserbook.id}">修改</a>
-					<a href="${ctx}/book/buserbook/delete?id=${buserbook.id}" onclick="return confirmx('确认要删除该用户图书管理吗？', this.href)">删除</a>
+					<a href="${ctx}/book/buserbook/delete?id=${buserbook.id}" onclick="return confirmx('确认要删除该用户小说管理吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

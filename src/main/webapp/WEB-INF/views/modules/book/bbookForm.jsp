@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>图书管理管理</title>
+	<title>小说管理管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -27,8 +27,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/book/bbook/">图书管理列表</a></li>
-		<li class="active"><a href="${ctx}/book/bbook/form?id=${bbook.id}">图书管理<shiro:hasPermission name="book:bbook:edit">${not empty bbook.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="book:bbook:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/book/bbook/">小说管理列表</a></li>
+		<li class="active"><a href="${ctx}/book/bbook/form?id=${bbook.id}">小说管理<shiro:hasPermission name="book:bbook:edit">${not empty bbook.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="book:bbook:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="bbook" action="${ctx}/book/bbook/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
